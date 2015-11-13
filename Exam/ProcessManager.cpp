@@ -1,28 +1,18 @@
 #include "ProcessManager.h"
 
-typedef int(*func)(GameData);
-
-func processManagerMemory(GameData &options)
+void processPush(Tasker &tasker, mainFuctionType function)
 {
-	int memSize = 0;
-	func* funmass = new func[memSize];
-	return funmass[1];
+	addElement(tasker.activeFunctions, tasker.memSize, function);
 }
 
-void processManagerApp(GameData &options)
+void processIterator(GameData &options, Tasker &tasker)
 {
-	int memSize = 0;
-	func* funmass = new func[memSize];
-
-	if (!memSize)
+	for (int i = 0; i < tasker.memSize; i++)
 	{
-		for (int i = 0; i < memSize; i++)
+		int result = tasker.activeFunctions[i](options);
+		if (result == -1)
 		{
-			int result = funmass[i](options);
-			if (result == -1)
-			{
-
-			}
-		}	
+			removeElement(tasker.activeFunctions, tasker.memSize, i);
+		}
 	}
 }

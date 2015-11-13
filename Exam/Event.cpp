@@ -17,17 +17,7 @@ bool KB_Hit(int Key)
 				if (KBHitBase[j] == Key)
 					return false;
 			}
-			int* newBase = new int[++BaseSize];
-			for (int i = 0; i < BaseSize - 1; i++)
-			{
-				newBase[i] = KBHitBase[i];
-			}
-			newBase[BaseSize - 1] = Key;
-			if (BaseSize > 1)
-			{
-				delete[] KBHitBase;
-			}
-			KBHitBase = newBase;
+			addElement(KBHitBase, BaseSize, Key);
 			return true;
 		}
 		if (BaseSize && !KB_Pressed(Key))
@@ -36,20 +26,7 @@ bool KB_Hit(int Key)
 			{
 				if (KBHitBase[i] == Key)
 				{
-					if (BaseSize == 1)
-					{
-						delete[] KBHitBase;
-						BaseSize--;
-						return false;
-					}
-					int* newBase = new int[--BaseSize];
-					for (int j = 0, k = 0; j < BaseSize+1; j++)
-					{
-						if (j != i)
-							newBase[k++] = KBHitBase[j];
-					}
-					delete[] KBHitBase;
-					KBHitBase = newBase;
+					removeElement(KBHitBase, BaseSize, i);
 					break;
 				}
 			}
