@@ -20,6 +20,8 @@ int main(int argc, char* args[])
 	bool active = true;
 	GameData jack;
 	Tasker taskBase;
+
+	processPrepair(taskBase);
 	processPush(taskBase, test);
 
 	for (int i = 0; i < 10; i++)

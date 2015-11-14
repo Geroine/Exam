@@ -1,5 +1,11 @@
 #include "ProcessManager.h"
 
+void processPrepair(Tasker &tasker)
+{
+	tasker.activeFunctions = NULL;
+	tasker.memSize = 0;
+}
+
 void processPush(Tasker &tasker, mainFuctionType function)
 {
 	addElement(tasker.activeFunctions, tasker.memSize, function);

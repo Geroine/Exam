@@ -17,6 +17,8 @@ struct Tasker
 	mainFuctionType* activeFunctions;
 };
 
+void processPrepair(Tasker &tasker);
+
 void processPush(Tasker &tasker, mainFuctionType function);
 
 void processIterator(GameData &options, Tasker &tasker);
