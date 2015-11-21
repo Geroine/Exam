@@ -1,38 +1,55 @@
 #include "ProjectHeader.h"
 
-
-int test(GameData &options)
+int func1(GameData &data)
 {
-	static int counter = 0;
-	counter++;
-	cout << "test is calling" << endl;
-	if (counter > 20) return -1;
+	cout << "func1" << endl;
 	return 0;
 }
-int test2(GameData &options)
+
+int func2(GameData &data)
 {
-	cout << "            test2 is calling" << endl;
+	cout << "      func2" << endl;
+	return 0;
+}
+
+int func3(GameData &data)
+{
+	cout << "            func3" << endl;
 	return 0;
 }
 
 int main(int argc, char* args[])
 {
-	bool active = true;
-	GameData jack;
-	Tasker taskBase;
+	GameData data;
+	initGameData(data, 10, 10);
+	MMenu tMenu1;
+	pushElement(tMenu1, "function 1", func1);
+	pushElement(tMenu1, "function 2", func2);
 
-	processPrepair(taskBase);
-	processPush(taskBase, test);
+	MMenu tMenu2;
+	pushElement(tMenu2, "function 1", func1);
+	pushElement(tMenu2, "function 3", func3);
 
-	for (int i = 0; i < 10; i++)
+	MMenu mMenu;
+	pushElement(mMenu, "TestMenu 1", &tMenu1);
+	pushElement(mMenu, "TestMenu 2", &tMenu2);
+
+	changeGameMenu(data, mMenu);
+
+	for (int i = 0; i < data.menu.currentMenu->menuSize; i++)
 	{
-		processIterator(jack, taskBase);
-	}
-	processPush(taskBase, test2);
-	for (int i = 0; i < 20; i++)
-	{
-		processIterator(jack, taskBase);
+		cout << data.menu.currentMenu->elemList[i].buttonName << endl;
+		cout << " - - - - - - - " << endl;
+		for (int j = 0; j < data.menu.currentMenu->elemList[i].subMenu->menuSize; j++)
+		{
+			cout << data.menu.currentMenu->elemList[i].subMenu->elemList[j].buttonName << endl;
+			cout << "     _____     _____" << endl;
+			data.menu.currentMenu->elemList[i].subMenu->elemList[j].function(data);
+			cout << "     _____     _____" << endl;
+		}
+		cout << endl;
 	}
 
+	destGameData(data);
 	return 0;
 }
