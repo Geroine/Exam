@@ -3,8 +3,6 @@
 
 typedef int(*mainFunctionType)(GameData& options);
 
-void activeMenu(GameData &options);
-
 enum eMenuButtons
 {
 	eMBNewGame = 0,
@@ -50,3 +48,7 @@ void pushElement(MMenu &menu, char* name, mainFunctionType func);
 void pushElement(MMenu &menu, char* name, MMenu *addMenu);
 
 bool destMMenu(MMenu &menu);
+
+struct new_GFSurface;
+
+int activeMenu(GameData &options);

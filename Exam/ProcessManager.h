@@ -31,10 +31,11 @@ void processGraphicPrepair(Tasker &tasker, TaskerGraph &graphic);
 
 void processGraphicDelete(TaskerGraph &graphic);
 
-void processPrepair(Tasker &tasker);
+Tasker processPrepair();
 
 void processPush(Tasker &tasker, mainFunctionType function, char* functioName);
 
+void processIterator(GameData &options, Tasker &tasker);
+
 bool processSwap(Tasker &tasker, int id1, int id2);
 
-void processIterator(Tasker &tasker, GameData &options);

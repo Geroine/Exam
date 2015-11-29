@@ -39,13 +39,18 @@ struct BMPPicture
 {
 	BMPFile file;
 	BMPInfo info;
-	RGBBlock** bitmap;
+	RGBBlock** bitmap = NULL;
 };
 
+BMPPicture* bmpReader(char* name);
 bool bmpReader(BMPPicture &picture, char* filename);
+void bmpClear();
+bool equalRGBBlock(RGBBlock &a, RGBBlock &b);
 void bmpRotate(BMPPicture &picture);
 void bmpMirror(BMPPicture &picture);
+
 
 static unsigned short read_u16(FILE *fp);
 static unsigned int   read_u32(FILE *fp);
 static int            read_s32(FILE *fp);
+

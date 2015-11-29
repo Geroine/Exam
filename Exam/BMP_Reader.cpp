@@ -1,8 +1,53 @@
 #include "BMP_Reader.h"
 
+BMPPicture* bmpReader(char* filename)
+{
+	static int size = 0;
+	static BMPPicture** bpicmass = new BMPPicture*[size];
+	if (!strcmp(filename, "_DELETE_BMP_BUFFER_"))
+	{
+		for (int i = 0; i < size; i++)
+		{
+			delete2d(bpicmass[i]->bitmap, bpicmass[i]->info.biHeight);
+		}
+		delete2d(bpicmass, size);
+		bpicmass = new BMPPicture*[size];
+		size = 0;
+		return NULL;
+	}
+
+	BMPPicture* bpic = new BMPPicture;
+	if (bmpReader(*bpic, filename))
+	{
+		addElement(bpicmass, size, bpic);
+		return bpic;
+	}
+	else
+	{
+		delete bpic;
+		return NULL;
+	}
+}
+
+void bmpClear()
+{
+	bmpReader("_DELETE_BMP_BUFFER_");
+}
+
+bool equalRGBBlock(RGBBlock &a, RGBBlock &b)
+{
+	if (a.rgbBlue != b.rgbBlue) return false;
+	if (a.rgbGreen != b.rgbGreen) return false;
+	if (a.rgbRed != b.rgbRed) return false;
+	return true;
+}
+
 bool bmpReader(BMPPicture &picture, char* filename)
 {
-	FILE * pFile = fopen(filename, "rb");
+	if (picture.bitmap != NULL)
+		delete2d(picture.bitmap, picture.info.biHeight);
+
+	FILE* pFile = fopen(filename, "rb");
 	if (!pFile) return false;
 
 	picture.file.bfType = read_u16(pFile);

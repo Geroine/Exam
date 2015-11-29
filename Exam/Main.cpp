@@ -20,9 +20,20 @@ int func3(GameData &data)
 
 int main(int argc, char* args[])
 {
+	int mainsurfX = 64;
+	int mainsurfY = 64;
 	GameData data;
-	initGameData(data, 10, 10);
-	MMenu tMenu1;
+	initGameData(data, mainsurfX, mainsurfY);
+	//SetConsWinSize(mainsurfX*9, mainsurfY*10);
+
+	for (int i = 0; i < 100; i++)
+	{
+		picToSurface("pic/mario4.bmp");
+	}
+
+	Tasker tasker = processPrepair();
+
+	/*MMenu tMenu1;
 	pushElement(tMenu1, "function 1", func1);
 	pushElement(tMenu1, "function 2", func2);
 
@@ -48,8 +59,8 @@ int main(int argc, char* args[])
 			cout << "     _____     _____" << endl;
 		}
 		cout << endl;
-	}
-
+	}*/
+	bmpClear();
 	destGameData(data);
 	return 0;
 }

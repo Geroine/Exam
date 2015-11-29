@@ -7,19 +7,29 @@ enum eGameState
 	eGSDeactive
 };
 
-struct GFSurface;
+struct new_GFSurface;
 struct MMenu;
 
 struct GameOptions
 {
-	GFSurface* mainSurface;
+	bool resize;
+	new_GFSurface* mainSurface;
+	/*
+	Возникла сумасшедшая идея создать массив поверхностей, а если поверхность - это 2х мерный массив, то на деле **GCSurface
+	А значит будет очередь нанесения поверхностей на экран в их порядке. Если придержаться старой идеи, тогда приоритет
+	изображений будет зависить от позиции в "процессоре" моей будущей игры. 
+	Все таки, пока забью на меню, сделаю это вакханалию.
+	*/
+	int stackSize;
+	new_GFSurface* stackSurface; // Это еще как-то удалять надо...
+
 };
 
 struct GameMenu
 {
 	MMenu* currentMenu;
-	int posX;
-	int posY;
+	int width;
+	int height;
 };
 
 struct GameKeyboardSettings
@@ -44,6 +54,10 @@ struct GameData
 
 void initGameData(GameData &data, int winX, int winY);
 
+void pushGameSuface(GameData &data, new_GFSurface &surface);
+
 void destGameData(GameData &data);
 
 void changeGameMenu(GameData &data, MMenu &menu);
+
+int activeGraphic(GameData &data);
