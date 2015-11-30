@@ -98,6 +98,7 @@ struct LevelData
 	int winY;
 };
 
+
 int getRunnerObjectType(RGBBlock &block);
 IndexTile getRunnerTileIndex(BMPPicture &mapset, RGBBlock &block);
 LevelStaticObject cleanStaticObject();

@@ -30,6 +30,7 @@ struct G4Block
 	char sCol;
 	char bCol;
 	bool visible = false;
+	bool redraw = false;
 };
 
 struct new_GFSurface
@@ -97,6 +98,8 @@ bool getChapSurface(new_GFSurface &dest,
 bool getChapSurface(new_GFSurface &dest,
 	new_GFSurface &source,
 	int startX, int startY);
+
+void halfSurface(new_GFSurface &surf);
 
 // Бесполезная функция. Столько нервов, все из за нее! А может и нет
 new_GFSurface* initBackground(int sizeX, int sizeY, int color);

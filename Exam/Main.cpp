@@ -20,15 +20,20 @@ int func3(GameData &data)
 
 int main(int argc, char* args[])
 {
-	int mainsurfX = 160;
+	int mainsurfX = 100;
 	int mainsurfY = 75;
 
 	GameData data;
 	initGameData(data, mainsurfX, mainsurfY);
-	data.runner = initLevelData("level/test", "spr/runner", mainsurfX, mainsurfY);
+	data.runner = initLevelData("level/test2", "spr/runner", mainsurfX, mainsurfY);
 	SetConsWinSize(mainsurfX*9, mainsurfY*10);
+	
 	new_GFSurface* surf = initBackground(mainsurfX, mainsurfY, CC_Cyan);
 	pushGameSuface(data, *surf);
+	//pushGameSuface(data, *picToSurface("pic/pict.bmp", UP_MIRROR));
+
+	
+
 
 	//int mainsurfX = 128;
 	//int mainsurfY = 64;
@@ -43,7 +48,7 @@ int main(int argc, char* args[])
 	//blitSurface(*back, *cpic, 13, 2, 80, 0, 80 + 16, 16);
 	//back = pushGameSuface(data, *back);
 	Tasker tasker = processPrepair();
-	
+	//
 	processPush(tasker, activeRunner, "runner");
 	processPush(tasker, activeGraphic, "graph");
 	while (true)

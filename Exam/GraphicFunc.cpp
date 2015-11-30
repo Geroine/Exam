@@ -492,17 +492,33 @@ void copyG4Block(G4Block &a, G4Block &b)
 	a.visible = b.visible;
 }
 
+void halfSurface(new_GFSurface &surf)
+{
+	new_GFSurface* trimSurf = initSurface(surf.ccWidth/2, surf.ccHeight/2, 0, 0);
+	trimSurf->posX = surf.posX;
+	trimSurf->posY = surf.posY;
+	for (int i = 0,m = 0; i < surf.ccHeight; i++)
+	{
+		if (i % 2 != 0)
+		{
+			for (int j = 0, k = 0; j < surf.ccWidth; j++)
+			{
+				if (j % 2 != 0)
+				{
+					copyG4Block(trimSurf->symbmap[m][k++], surf.symbmap[i][j]);
+				}
+			}
+			m++;
+		}
+	}
+	delete2d(surf.symbmap, surf.ccHeight);
+	surf = *trimSurf;
+}
+
 void blitSurface(new_GFSurface &mainSurf, new_GFSurface &subSurf, int posX = 0, int posY = 0)
 {
-	for (int i = 0; i < subSurf.ccHeight; i++)
-	{
-		if (mainSurf.ccHeight > i + posY)
-			for (int j = 0; j < subSurf.ccWidth; j++)
-			{
-				if (mainSurf.ccWidth > j + posX && subSurf.symbmap[i][j].visible)
-					copyG4Block(mainSurf.symbmap[i+posY][j+posX], subSurf.symbmap[i][j]);
-			}
-	}
+	blitSurface(mainSurf, subSurf,
+		posX, posY, 0, 0, subSurf.ccWidth, subSurf.ccHeight);
 }
 
 void blitSurfFull(new_GFSurface &mainSurf, new_GFSurface &subSurf, int posX = 0, int posY = 0)
@@ -539,6 +555,7 @@ bool blitSurface(new_GFSurface &mainSurf, new_GFSurface &subSurf,
 				if (mainSurf.ccWidth > j + posX && subSurf.symbmap[i + startY][j + startX].visible)
 					// Вот тут забыл добавит стартовую позицию! 2 ДНЯ СТРАДАЛ. Думал, блин, чего же функция копирует не верный параметр
 					// Visible. Наконец то нашел. Боже, как я счастлив!!!
+					// На этом страдания не закончились, я вернулся сюда спустя еще 4 часа... Тут где то баг...
 				{
 					copyG4Block(mainSurf.symbmap[i + posY][j + posX], subSurf.symbmap[i + startY][j + startX]);
 				}

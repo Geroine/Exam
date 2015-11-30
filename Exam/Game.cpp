@@ -58,7 +58,7 @@ int activeGraphic(GameData &data)
 	{
 		for (int j = 0; j < data.options.mainSurface->ccWidth; j++)
 		{
-			if ((!equalG4Block(copy->symbmap[i][j], data.options.mainSurface->symbmap[i][j])))
+			if (!equalG4Block(copy->symbmap[i][j], data.options.mainSurface->symbmap[i][j]))
 			{
 				SetConsCurPos(j, i);
 				SetColorBgTex(data.options.mainSurface->symbmap[i][j].bCol, data.options.mainSurface->symbmap[i][j].sCol);

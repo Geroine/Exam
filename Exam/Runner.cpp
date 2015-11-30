@@ -135,7 +135,9 @@ int initLevel(LevelData &data, char* levelname)
 			data.lvlInfo.levelmap[i][j] = getStaticObject(data, getColorCode(levelmap->bitmap[i][j]));
 		}
 	}
-	data.lvlInfo.levelSurf = initSurface(data.lvlInfo.mapSizeX*TILESIZE, data.lvlInfo.mapSizeY*TILESIZE, 0, 0);
+	data.lvlInfo.lvlSizeX = data.lvlInfo.mapSizeX*TILESIZE;
+	data.lvlInfo.lvlSizeY = data.lvlInfo.mapSizeY*TILESIZE;
+	data.lvlInfo.levelSurf = initSurface(data.lvlInfo.lvlSizeX, data.lvlInfo.lvlSizeY,0,0);
 
 	for (int i = 0; i < data.lvlInfo.mapSizeY; i++)
 	{
@@ -192,6 +194,8 @@ int activeRunner(GameData &data)
 {
 	static int screenPosX = 0;
 	static int screenPosY = 0;
+	static double bckgPosX = 0;
+	static double bckgPosY = 0;
 	static bool initialize = true;
 	static new_GFSurface* screen;
 	if (initialize)
@@ -200,11 +204,22 @@ int activeRunner(GameData &data)
 		initialize = false;
 	}
 
-	if (KB_Pressed(VK_RIGHT)) screenPosX--;
-	if (KB_Pressed(VK_LEFT)) screenPosX++;
-	blitSurface(*screen, *data.runner->lvlInfo.levelSurf, screenPosX, screenPosY);
-
-
+	if (KB_Pressed(VK_RIGHT))
+	{
+		screenPosX += 1;
+		bckgPosX += 0.3;
+	}
+	if (KB_Pressed(VK_LEFT)) 
+	{
+		screenPosX -= 1;
+		bckgPosX-=0.3;
+	}
+	if (KB_Pressed(VK_UP)) screenPosY -= 5;
+	if (KB_Pressed(VK_DOWN)) screenPosY += 5;
+	if (screenPosX < 0) screenPosX = 0;
+	if (screenPosY < 0) screenPosY = 0;
+	blitSurface(*screen, *data.runner->lvlInfo.background,0,0, bckgPosX, bckgPosY, data.runner->lvlInfo.background->ccWidth, data.runner->lvlInfo.background->ccHeight);
+	blitSurface(*screen, *data.runner->lvlInfo.levelSurf, 0, 0, screenPosX, screenPosY,data.runner->lvlInfo.lvlSizeX, data.runner->lvlInfo.lvlSizeY);
 
 
 	return 0;
