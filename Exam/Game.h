@@ -12,7 +12,6 @@ struct MMenu;
 
 struct GameOptions
 {
-	bool resize;
 	new_GFSurface* mainSurface;
 	/*
 	Возникла сумасшедшая идея создать массив поверхностей, а если поверхность - это 2х мерный массив, то на деле **GCSurface
@@ -21,7 +20,8 @@ struct GameOptions
 	Все таки, пока забью на меню, сделаю это вакханалию.
 	*/
 	int stackSize;
-	new_GFSurface* stackSurface; // Это еще как-то удалять надо...
+	new_GFSurface** stackSurface; // Это еще как-то удалять надо... // С уделанием как-то разобрался
+	bool redraw;
 
 };
 
@@ -45,16 +45,19 @@ struct GameKeyboardSettings
 	int vkRAlt = VK_RMENU;
 };
 
+struct LevelData;
+
 struct GameData
 {
 	int state;
 	GameOptions options;
 	GameMenu menu;
+	LevelData* runner;
 };
 
 void initGameData(GameData &data, int winX, int winY);
 
-void pushGameSuface(GameData &data, new_GFSurface &surface);
+new_GFSurface* pushGameSuface(GameData &data, new_GFSurface &surface);
 
 void destGameData(GameData &data);
 

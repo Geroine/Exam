@@ -1,5 +1,6 @@
 #pragma once
 #include "ProjectHeader.h"
+#define UP_MIRROR 1
 
 struct BMPFile
 {
@@ -29,10 +30,10 @@ struct BMPInfo
 
 struct RGBBlock
 {
-	int   rgbBlue;
-	int   rgbGreen;
-	int   rgbRed;
-	int   rgbReserved;
+	unsigned   rgbBlue;
+	unsigned   rgbGreen;
+	unsigned   rgbRed;
+	unsigned   rgbReserved;
 };
 
 struct BMPPicture
@@ -43,11 +44,15 @@ struct BMPPicture
 };
 
 BMPPicture* bmpReader(char* name);
+BMPPicture* bmpReader(char*filename, int mode);
 bool bmpReader(BMPPicture &picture, char* filename);
 void bmpClear();
+RGBBlock rgbMask();
+int getColorCode(RGBBlock &block);
 bool equalRGBBlock(RGBBlock &a, RGBBlock &b);
 void bmpRotate(BMPPicture &picture);
 void bmpMirror(BMPPicture &picture);
+void bmpUpMirror(BMPPicture &bpic);
 
 
 static unsigned short read_u16(FILE *fp);

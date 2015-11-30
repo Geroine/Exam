@@ -1,6 +1,7 @@
 #pragma once
 #include "ProjectHeader.h"
 #define NO_POS -1
+#define UP_MIRROR 1
 
 
 enum eConsoleColor
@@ -49,12 +50,15 @@ struct GFSurface
 	char** bitmap;
 };
 
+
 struct BMPPicture;
 struct RGBBlock;
 struct GameData;
 
 // Добавил новую структуру G4Surface,надо не забыть переделать эту функцию, чтобы конвертация цвета была вынесена отдельно
 void convertPicture(new_GFSurface &cpic, BMPPicture &bpic, int cc_true, int cc_half, RGBBlock* key);
+
+new_GFSurface* convertPicture(BMPPicture &bpic, RGBBlock* key);
 
 RGBBlock getColor(char id);
 
@@ -74,6 +78,8 @@ void copyG4Block(G4Block &a, G4Block &b);
 
 void blitSurface(new_GFSurface &mainSurf, new_GFSurface &subSurf, int posX, int posY);
 
+void blitSurfFull(new_GFSurface &mainSurf, new_GFSurface &subSurf, int posX, int posY);
+
 bool blitSurface(new_GFSurface &mainSurf, new_GFSurface &subSurf,
 	int posX, int posY,
 	int startX, int startY,
@@ -83,7 +89,19 @@ new_GFSurface* cutChapSurface(new_GFSurface &source,
 	int startX, int startY,
 	int endX, int endY);
 
-new_GFSurface* picToSurface(char* filename);
+bool getChapSurface(new_GFSurface &dest,
+	new_GFSurface &source,
+	int startX, int startY,
+	int endX, int endY);
+
+bool getChapSurface(new_GFSurface &dest,
+	new_GFSurface &source,
+	int startX, int startY);
+
+// Бесполезная функция. Столько нервов, все из за нее! А может и нет
+new_GFSurface* initBackground(int sizeX, int sizeY, int color);
+
+new_GFSurface* picToSurface(char* filename, int pre_open_moves);
 
 void setPosSurface(int posX, int posY);
 

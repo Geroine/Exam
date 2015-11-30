@@ -74,6 +74,29 @@ void addElement(T* &arr, int &size, T* elem)
 }
 
 template <typename T>
+void addElementest(T* &arr, int &size, T* elem)
+{
+	if (size == 0)
+	{
+		T* newArr = new T[++size];
+		newArr[0] = *elem;
+		arr = newArr;
+		return;
+	}
+
+	T* newArr = new T[++size];
+	for (int i = 0; i < size - 1; i++)
+	{
+		newArr[i] = arr[i];
+	}
+	newArr[size - 1] = *elem;
+
+	delete[] arr;
+	arr = newArr;
+	return;
+}
+
+template <typename T>
 bool swapElement(T* &arr, int size, int index1, int index2)
 {
 	if (index1 < 0 || index2 < 0) return false;

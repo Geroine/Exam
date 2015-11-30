@@ -1,12 +1,20 @@
 #include "GraphicFunc.h"
-#define ALGORITHM 3
+#define ALGORITHM 1
 #define CC_TRUE 127
 #define CC_HALF 94
-#define CC_1W 127
+#define CC_1W 100
 #define CC_2W 127
 #define CC_3W 50
 
+new_GFSurface* convertPicture(BMPPicture &bpic, RGBBlock* key)
+{
+	new_GFSurface* cpic = initSurface(bpic.info.biWidth, bpic.info.biHeight, 0, 0);
+	convertPicture(*cpic, bpic, 127, 127, key);
+	return cpic;
+}
 
+// Эта функция создает surface внутри функции, а не через initSurface. Такие поверхности будут оставаться в памяти.
+// Очень кривая функция, надо будет исправить
 void convertPicture(new_GFSurface &cpic, BMPPicture &bpic, int cc_true, int cc_half, RGBBlock* key)
 {
 	bool newPic = false;
@@ -129,7 +137,11 @@ for (int i = 0; i < cpic.ccHeight; i++)
 		{
 			if (!equalRGBBlock(bpic.bitmap[i][j], *key)) cpic.symbmap[i][j].visible = true;
 		}
-		else cpic.symbmap[i][j].visible = true;
+		else
+		{
+			cpic.symbmap[i][j].visible = false;
+			continue;
+		}
 
 		ccSum = (bpic.bitmap[i][j].rgbRed +
 			bpic.bitmap[i][j].rgbGreen +
@@ -380,6 +392,7 @@ G4Block emptyG4Block()
 	return empty;
 }
 
+
 void initSurface(new_GFSurface &surface,int sizeX, int sizeY, int posX, int posY)
 {
 	surface.ccHeight = sizeY;
@@ -405,7 +418,7 @@ new_GFSurface* initSurface(int sizeX, int sizeY, int posX, int posY)
 	static int size = 0;
 	static new_GFSurface* surfacemass = new new_GFSurface[size];
 
-	if (sizeX == -1 && sizeY == -1)
+	if (sizeX == -2 && sizeY == 0 && posX == -1 && posY == -2)
 	{
 		for (int i = 0; i < size; i++)
 		{
@@ -426,22 +439,40 @@ new_GFSurface* initSurface(int sizeX, int sizeY, int posX, int posY)
 	surface->posY = posY;
 
 	surface->symbmap = new G4Block*[surface->ccHeight];
+
+	G4Block block = emptyG4Block();
+
 	for (int i = 0; i < surface->ccHeight; i++)
 		surface->symbmap[i] = new G4Block[surface->ccWidth];
 	for (int i = 0; i < surface->ccHeight; i++)
 	{
 		for (int j = 0; j < surface->ccWidth; j++)
 		{
-			surface->symbmap[i][j] = emptyG4Block();
+			surface->symbmap[i][j] = block;
 		}
 	}
-	addElement(surfacemass, size, surface);
+	addElementest(surfacemass, size, surface);
+	return surface;
+}
+
+// Говнокод
+new_GFSurface* initBackground(int sizeX, int sizeY, int color)
+{
+	new_GFSurface* surface = initSurface(sizeX, sizeY, 0, 0);
+	for (int i = 0; i < surface->ccHeight; i++)
+	{
+		for (int j = 0; j < surface->ccWidth; j++)
+		{
+			surface->symbmap[i][j].bCol = color;
+			surface->symbmap[i][j].visible = true;
+		}
+	}
 	return surface;
 }
 
 void clearSurface()
 {
-	initSurface(-1, -1, -1, -1);
+	initSurface(-2, 0, -1, -2);
 }
 
 bool equalG4Block(G4Block &a, G4Block &b)
@@ -468,17 +499,35 @@ void blitSurface(new_GFSurface &mainSurf, new_GFSurface &subSurf, int posX = 0, 
 		if (mainSurf.ccHeight > i + posY)
 			for (int j = 0; j < subSurf.ccWidth; j++)
 			{
-				if (mainSurf.ccWidth > j + posX && subSurf.symbmap[i][j].visible)// && subSurf.)
+				if (mainSurf.ccWidth > j + posX && subSurf.symbmap[i][j].visible)
 					copyG4Block(mainSurf.symbmap[i+posY][j+posX], subSurf.symbmap[i][j]);
 			}
 	}
 }
+
+void blitSurfFull(new_GFSurface &mainSurf, new_GFSurface &subSurf, int posX = 0, int posY = 0)
+{
+	for (int i = 0; i < subSurf.ccHeight; i++)
+	{
+		if (mainSurf.ccHeight > i + posY)
+			for (int j = 0; j < subSurf.ccWidth; j++)
+			{
+				if (mainSurf.ccWidth > j + posX)
+					copyG4Block(mainSurf.symbmap[i + posY][j + posX], subSurf.symbmap[i][j]);
+			}
+	}
+}
+
+
 
 bool blitSurface(new_GFSurface &mainSurf, new_GFSurface &subSurf, 
 	int posX, int posY, 
 	int startX, int startY, 
 	int endX, int endY)
 {
+	if (startX < 0) startX = 0;
+	if (startY < 0) startY = 0;
+	
 	if (startX >= subSurf.ccWidth || startY >= subSurf.ccHeight)
 		return false;
 	for (int i = 0; i < endY-startY; i++)
@@ -487,8 +536,13 @@ bool blitSurface(new_GFSurface &mainSurf, new_GFSurface &subSurf,
 			for (int j = 0; j < endX - startX; j++)
 			{
 				if (j + startX >= subSurf.ccWidth || i + startY >= subSurf.ccHeight) break;
-				if (mainSurf.ccWidth > j + posX && subSurf.symbmap[i][j].visible)
-					copyG4Block(mainSurf.symbmap[i + posY][j + posX], subSurf.symbmap[i+startY][j+startX]);
+				if (mainSurf.ccWidth > j + posX && subSurf.symbmap[i + startY][j + startX].visible)
+					// Вот тут забыл добавит стартовую позицию! 2 ДНЯ СТРАДАЛ. Думал, блин, чего же функция копирует не верный параметр
+					// Visible. Наконец то нашел. Боже, как я счастлив!!!
+				{
+					copyG4Block(mainSurf.symbmap[i + posY][j + posX], subSurf.symbmap[i + startY][j + startX]);
+				}
+
 			}
 	}
 	return true;
@@ -506,15 +560,41 @@ new_GFSurface* cutChapSurface(new_GFSurface &source,
 	return surf;
 }
 
-new_GFSurface* picToSurface(char* filename)
+
+bool getChapSurface(new_GFSurface &dest,
+	new_GFSurface &source,
+	int startX, int startY,
+	int endX, int endY)
+{
+	if (startX < 1 || startY < 1) return false;
+	blitSurface(dest, source, 0, 0, startX, startY, endX, endY);
+	return true;
+}
+
+bool getChapSurface(new_GFSurface &dest,
+	new_GFSurface &source,
+	int startX, int startY)
+{
+	blitSurface(dest, source, 0, 0, startX, startY, source.ccWidth, source.ccHeight);
+	return true;
+}
+
+new_GFSurface* picToSurface(char* filename, int pre_open_moves)
 {
 	BMPPicture* bpic = bmpReader(filename);
 	if (!bpic) return NULL;
+	if (pre_open_moves == UP_MIRROR)
+	{
+		bmpRotate(*bpic);
+		bmpMirror(*bpic);
+		bmpRotate(*bpic);
+	}
 	new_GFSurface* cpic = initSurface(bpic->info.biWidth, bpic->info.biHeight, 0, 0);
-	convertPicture(*cpic, *bpic, 127, 127, NULL);
-	bmpClear(); // Это лучше тут не оставлять
+	convertPicture(*cpic, *bpic, 127, 127, &rgbMask());
+	// bmpClear(); // Это лучше тут не оставлять
 	return cpic;
 }
+
 void posSurface(new_GFSurface &surf, int posX, int posY)
 {
 	if (!NO_POS) surf.posX = posX;

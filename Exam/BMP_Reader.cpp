@@ -29,9 +29,32 @@ BMPPicture* bmpReader(char* filename)
 	}
 }
 
+BMPPicture* bmpReader(char*filename, int mode)
+{
+	BMPPicture* bpic = bmpReader(filename);
+	if (!bpic) return NULL;
+	if (mode == UP_MIRROR)
+		bmpUpMirror(*bpic);
+	return bpic;
+}
+
 void bmpClear()
 {
 	bmpReader("_DELETE_BMP_BUFFER_");
+}
+
+RGBBlock rgbMask()
+{
+	RGBBlock rgb;
+	rgb.rgbRed = 255;
+	rgb.rgbGreen = 10;
+	rgb.rgbBlue = 255;
+	return rgb;
+}
+
+int getColorCode(RGBBlock &block)
+{
+	return (block.rgbRed << 16) | (block.rgbGreen << 8) | (block.rgbBlue);
 }
 
 bool equalRGBBlock(RGBBlock &a, RGBBlock &b)
@@ -89,6 +112,8 @@ bool bmpReader(BMPPicture &picture, char* filename)
 	return true;
 }
 
+
+
 void bmpRotate(BMPPicture &picture)
 {
 
@@ -133,6 +158,12 @@ void bmpMirror(BMPPicture &picture)
 	picture.bitmap = bmpbuff;
 }
 
+void bmpUpMirror(BMPPicture &bpic)
+{
+	bmpRotate(bpic);
+	bmpMirror(bpic);
+	bmpRotate(bpic);
+}
 
 static unsigned short read_u16(FILE *fp)
 {
