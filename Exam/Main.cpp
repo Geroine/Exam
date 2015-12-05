@@ -14,25 +14,25 @@ int func2(GameData &data)
 
 int func3(GameData &data)
 {
-	cout << "            func3" << endl;
+	halfSurface(*data.RPG->lvlInfo.screen);
 	return 0;
 }
 
 int main(int argc, char* args[])
 {
-	int mainsurfX = 100;
+	int mainsurfX = 90;
 	int mainsurfY = 75;
 
 	GameData data;
 	initGameData(data, mainsurfX, mainsurfY);
-	data.runner = initLevelData("level/test2", "spr/runner", mainsurfX, mainsurfY);
+	data.RPG = initLevelData("rpg", "rpg", mainsurfX, mainsurfY);
 	SetConsWinSize(mainsurfX*9, mainsurfY*10);
 	
 	new_GFSurface* surf = initBackground(mainsurfX, mainsurfY, CC_Cyan);
+	
 	pushGameSuface(data, *surf);
 	//pushGameSuface(data, *picToSurface("pic/pict.bmp", UP_MIRROR));
 
-	
 
 
 	//int mainsurfX = 128;
@@ -41,7 +41,7 @@ int main(int argc, char* args[])
 	//initGameData(data, mainsurfX, mainsurfY);
 	//SetConsWinSize(mainsurfX * 9, mainsurfY * 10);
 
-	//new_GFSurface* cpic = picToSurface("spr/runner_main.bmp", UP_MIRROR);
+	//new_GFSurface* cpic = picToSurface("spr/RPG_main.bmp", UP_MIRROR);
 	//new_GFSurface* back = initSurface(mainsurfX, mainsurfY, 0, 0);
 	//blitSurface(*back, *cpic, 16, 2, 48, 48, 64, 64);
 	//blitSurface(*back, *cpic, 25, 41, 48+16, 48, 64 + 16, 64);
@@ -49,10 +49,11 @@ int main(int argc, char* args[])
 	//back = pushGameSuface(data, *back);
 	Tasker tasker = processPrepair();
 	//
-	processPush(tasker, activeRunner, "runner");
+	processPush(tasker, activeRPG, "RPG");
 	processPush(tasker, activeGraphic, "graph");
 	while (true)
 	{
+
 		processIterator(data, tasker);
 	}
 	return 0;
@@ -65,7 +66,7 @@ int main(int argc, char* args[])
 //SetConsWinSize(mainsurfX*9, mainsurfY*10);
 
 
-//new_GFSurface* cpic = picToSurface("spr/runner_main.bmp", UP_MIRROR);
+//new_GFSurface* cpic = picToSurface("spr/RPG_main.bmp", UP_MIRROR);
 
 //pushGameSuface(data, *initBackground(mainsurfX,mainsurfY,CC_Black));
 //pushGameSuface(data, *cpic);

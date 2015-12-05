@@ -52,7 +52,7 @@ struct GameData
 	int state;
 	GameOptions options;
 	GameMenu menu;
-	LevelData* runner;
+	LevelData* RPG;
 };
 
 void initGameData(GameData &data, int winX, int winY);

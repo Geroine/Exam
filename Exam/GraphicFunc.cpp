@@ -136,11 +136,15 @@ for (int i = 0; i < cpic.ccHeight; i++)
 		if (key != NULL)
 		{
 			if (!equalRGBBlock(bpic.bitmap[i][j], *key)) cpic.symbmap[i][j].visible = true;
+			else
+			{
+				cpic.symbmap[i][j].visible = false;
+				continue;
+			}
 		}
 		else
 		{
-			cpic.symbmap[i][j].visible = false;
-			continue;
+			cpic.symbmap[i][j].visible = true;
 		}
 
 		ccSum = (bpic.bitmap[i][j].rgbRed +
@@ -534,6 +538,18 @@ void blitSurfFull(new_GFSurface &mainSurf, new_GFSurface &subSurf, int posX = 0,
 	}
 }
 
+void blitSurfx2(new_GFSurface &mainSurf, new_GFSurface &subSurf,int index, int posX, int posY)
+{
+	for (int i = 0; i < subSurf.ccHeight; i++)
+	{
+		if (mainSurf.ccHeight > i + posY)
+			for (int j = 0; j < subSurf.ccWidth; j++)
+			{
+				if (mainSurf.ccWidth > j + posX &&  (i+j) % 2 == index)
+					copyG4Block(mainSurf.symbmap[i + posY][j + posX], subSurf.symbmap[i][j]);
+			}
+	}
+}
 
 
 bool blitSurface(new_GFSurface &mainSurf, new_GFSurface &subSurf, 

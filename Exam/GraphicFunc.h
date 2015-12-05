@@ -57,9 +57,9 @@ struct RGBBlock;
 struct GameData;
 
 // Добавил новую структуру G4Surface,надо не забыть переделать эту функцию, чтобы конвертация цвета была вынесена отдельно
-void convertPicture(new_GFSurface &cpic, BMPPicture &bpic, int cc_true, int cc_half, RGBBlock* key);
+void convertPicture(new_GFSurface &cpic, BMPPicture &bpic, int cc_true, int cc_half, RGBBlock* key = NULL);
 
-new_GFSurface* convertPicture(BMPPicture &bpic, RGBBlock* key);
+new_GFSurface* convertPicture(BMPPicture &bpic, RGBBlock* key = NULL);
 
 RGBBlock getColor(char id);
 
@@ -101,6 +101,7 @@ bool getChapSurface(new_GFSurface &dest,
 
 void halfSurface(new_GFSurface &surf);
 
+void blitSurfx2(new_GFSurface &mainSurf, new_GFSurface &subSurf, int index = 0, int posX = 0, int posY = 0);
 // Бесполезная функция. Столько нервов, все из за нее! А может и нет
 new_GFSurface* initBackground(int sizeX, int sizeY, int color);
 
