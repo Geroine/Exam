@@ -62,6 +62,8 @@ void convertPicture(new_GFSurface &cpic, BMPPicture &bpic, int cc_true, int cc_h
 new_GFSurface* convertPicture(BMPPicture &bpic, RGBBlock* key = NULL);
 
 RGBBlock getColor(char id);
+// „истим поверхность, не тер€€ указатель на нее
+void cleanSurface(new_GFSurface &surface);
 
 void initSurface(new_GFSurface &surface, int sizeX, int sizeY, int posX, int posY); // ”далим
 
@@ -107,7 +109,9 @@ new_GFSurface* initBackground(int sizeX, int sizeY, int color);
 
 new_GFSurface* picToSurface(char* filename, int pre_open_moves);
 
-void setPosSurface(int posX, int posY);
+void posSurface(new_GFSurface &surf, int posX, int posY);
+//ќтражает поверхность
+void mirrorSurf(new_GFSurface &surf);
 
 void SetColorBgTex(int Bg, int Tex);
 

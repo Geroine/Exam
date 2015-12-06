@@ -47,7 +47,7 @@ RGBBlock rgbMask()
 {
 	RGBBlock rgb;
 	rgb.rgbRed = 255;
-	rgb.rgbGreen = 10;
+	rgb.rgbGreen = 255;
 	rgb.rgbBlue = 255;
 	return rgb;
 }

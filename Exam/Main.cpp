@@ -18,6 +18,8 @@ int func3(GameData &data)
 	return 0;
 }
 
+
+
 int main(int argc, char* args[])
 {
 	int mainsurfX = 90;
@@ -25,30 +27,15 @@ int main(int argc, char* args[])
 
 	GameData data;
 	initGameData(data, mainsurfX, mainsurfY);
-	data.RPG = initLevelData("rpg", "rpg", mainsurfX, mainsurfY);
+	data.RPG = initLevelData( "rpg", mainsurfX, mainsurfY);
 	SetConsWinSize(mainsurfX*9, mainsurfY*10);
 	
 	new_GFSurface* surf = initBackground(mainsurfX, mainsurfY, CC_Cyan);
 	
 	pushGameSuface(data, *surf);
-	//pushGameSuface(data, *picToSurface("pic/pict.bmp", UP_MIRROR));
 
-
-
-	//int mainsurfX = 128;
-	//int mainsurfY = 64;
-	//GameData data;
-	//initGameData(data, mainsurfX, mainsurfY);
-	//SetConsWinSize(mainsurfX * 9, mainsurfY * 10);
-
-	//new_GFSurface* cpic = picToSurface("spr/RPG_main.bmp", UP_MIRROR);
-	//new_GFSurface* back = initSurface(mainsurfX, mainsurfY, 0, 0);
-	//blitSurface(*back, *cpic, 16, 2, 48, 48, 64, 64);
-	//blitSurface(*back, *cpic, 25, 41, 48+16, 48, 64 + 16, 64);
-	//blitSurface(*back, *cpic, 13, 2, 80, 0, 80 + 16, 16);
-	//back = pushGameSuface(data, *back);
 	Tasker tasker = processPrepair();
-	//
+	
 	processPush(tasker, activeRPG, "RPG");
 	processPush(tasker, activeGraphic, "graph");
 	while (true)

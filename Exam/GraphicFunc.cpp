@@ -396,6 +396,24 @@ G4Block emptyG4Block()
 	return empty;
 }
 
+void cleanSurface(new_GFSurface &surface)
+{
+	if (surface.symbmap != NULL)
+	{
+		delete2d(surface.symbmap, surface.ccHeight);
+	}
+
+	surface.symbmap = new G4Block*[surface.ccHeight];
+	for (int i = 0; i < surface.ccHeight; i++)
+		surface.symbmap[i] = new G4Block[surface.ccWidth];
+	for (int i = 0; i < surface.ccHeight; i++)
+	{
+		for (int j = 0; j < surface.ccWidth; j++)
+		{
+			surface.symbmap[i][j] = emptyG4Block();
+		}
+	}
+}
 
 void initSurface(new_GFSurface &surface,int sizeX, int sizeY, int posX, int posY)
 {
@@ -599,9 +617,8 @@ bool getChapSurface(new_GFSurface &dest,
 	int startX, int startY,
 	int endX, int endY)
 {
-	if (startX < 1 || startY < 1) return false;
-	blitSurface(dest, source, 0, 0, startX, startY, endX, endY);
-	return true;
+	if (startX < 0 || startY < 0) return false;
+	return blitSurface(dest, source, 0, 0, startX, startY, endX, endY);
 }
 
 bool getChapSurface(new_GFSurface &dest,
@@ -632,6 +649,26 @@ void posSurface(new_GFSurface &surf, int posX, int posY)
 {
 	if (!NO_POS) surf.posX = posX;
 	if (!NO_POS) surf.posY = posY;
+}
+
+void mirrorSurf(new_GFSurface &surf)
+{
+
+	G4Block** ccbuff = new G4Block*[surf.ccHeight];
+	for (int i = 0; i < surf.ccHeight; i++) {
+		ccbuff[i] = new G4Block[surf.ccWidth];
+	}
+
+	for (int i = 0; i < surf.ccHeight; i++)
+	{
+		for (int j = 0, k = surf.ccWidth - 1; j < surf.ccWidth; j++, k--)
+		{
+			ccbuff[i][k] = surf.symbmap[i][j];
+		}
+	}
+
+	delete2d(surf.symbmap, surf.ccHeight);
+	surf.symbmap = ccbuff;
 }
 
 void SetColorBgTex(int Bg = 0, int Tex = 15) {
