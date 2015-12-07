@@ -417,32 +417,57 @@ int processPlayer(LevelData &data)
 		if (data.dyInfo.dynobj[i].objType == eDynPlayer)
 		{
 			// Код для объекта "игрок"
-
+			// Чтобы было проще обращаться к объекту.
+			LevelDynamicObject* player = &data.dyInfo.dynobj[i];
 			if (KB_Pressed(vk_W))
 			{
-				data.dyInfo.dynobj[i].posY--;
+				player->posY--;
+				player->direction = UP;
 			}
 			if (KB_Pressed(vk_A))
 			{
-				data.dyInfo.dynobj[i].posX--;
+				player->posX--;
+				player->direction = LEFT;
 			}
 			if (KB_Pressed(vk_S))
 			{
-				data.dyInfo.dynobj[i].posY++;
+				player->posY++;
+				player->direction = DOWN;
 			}
 			if (KB_Pressed(vk_D))
 			{
-				data.dyInfo.dynobj[i].posX++;
+				player->posX++;
+				player->direction = RIGHT;
+			}
+			if ((player->prevX != player->posX) &&
+				(player->prevY != player->posY))
+			{
+
 			}
 
+			// Если коллизия со стеной, позицию меняем обратно
 			if (checkCollision(data, data.dyInfo.dynobj[i]) == eDynWall)
 			{
-				data.dyInfo.dynobj[i].posX = data.dyInfo.dynobj[i].prevX;
-				data.dyInfo.dynobj[i].posY = data.dyInfo.dynobj[i].prevY;
+				player->posX = player->prevX;
+				player->posY = player->prevY;
 			}
 
-			data.dyInfo.dynobj[i].prevX = data.dyInfo.dynobj[i].posX;
-			data.dyInfo.dynobj[i].prevY = data.dyInfo.dynobj[i].posY;
+			// Анимация движения
+			if ((player->prevX != player->posX) ||
+				(player->prevY != player->posY))
+			{
+				int animationSleep = 10;
+				static int animTimer = 0;
+				animTimer += 1;
+				if (animTimer < animationSleep/2) player->spriteIndex = 1;
+				else player->spriteIndex = 2;
+				if (animTimer == animationSleep) animTimer = 0;
+			}
+			else player->spriteIndex = 0;
+
+
+			player->prevX = player->posX;
+			player->prevY = player->posY;
 
 			// Конец блока
 			return NULL;
